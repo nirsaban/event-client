@@ -1,0 +1,187 @@
+{
+
+    "confirmDetails" : {
+        "title" : "אימות פרטים",
+         "button" : "Send",
+        "image" :"https://storage.googleapis.com/events-confirmation/storage/confirmDetails.png",
+         "method" : "updateUser"
+    },
+
+    "createEvent" : {
+        "title" : "create event",
+         "button" : "Send",
+         "method" : "createEvent",
+
+        "image":"https://storage.googleapis.com/events-confirmation/storage/createEvent.png",
+        "inputs" : [
+            {
+                "name": "type",
+                "type" : "select" ,
+                "label" : "The event Kind",
+                "options" : ["weeding" ,"other"]
+            },
+            {
+                "name": "package",
+                "type" : "select" ,
+                "label" : "Package",
+                "options" : ["basic" ,"medium" ,"pro"]
+            },
+            {
+                "name": "date",
+                "type" : "date" ,
+                "label" : "Date",
+                "placeholder" : "Enter Date"
+            },
+            {
+                "name": "time",
+                "type" : "time" ,
+                "label" : "Time",
+                "placeholder" : "Enter Time"
+            },
+            {
+                "name": "locationName",
+                "type" : "text" ,
+                "label" : "Location name",
+                "placeholder" : "Enter Location name"
+            },
+            {
+                "name": "locationAddress",
+                "type" : "text" ,
+                "label" : "Location address",
+                "placeholder" : "Hertzel 31"
+            }
+        ]
+    },
+    "planners" :{
+        "title" : "The planners",
+        "button" : "Send",
+        "method" : "updateEvent",
+
+       "image":"https://storage.googleapis.com/events-confirmation/storage/createEvent.png",
+       "inputs" :[
+        {
+            "name" :"group",
+             "inputs" : [
+                {
+                    "name": "firstNameB",
+                    "type" : "text" ,
+                    "label" : "First name",
+                    "placeholder" : "Enter guests amount",
+                    "col" : 6
+                },
+                {
+                    "name": "lastNameB",
+                    "type" : "text" ,
+                    "label" : "Last name",
+                    "placeholder" : "Enter guests amount",
+                    "col" : 6
+                },
+                {
+                    "name": "rollB",
+                    "type" : "select" ,
+                    "label" : "Who is",
+                    "options" : ["Groom" ,"Bride"],
+                    "col" : 6
+                },
+                {
+                    "name": "phoneB",
+                    "type" : "tel" ,
+                    "label" : "Phone number",
+                    "placeholder" : "Enter phone number",
+                    "col" : 6
+                }
+    
+             ]
+         },
+         {
+            "name" :"group",
+             "inputs" : [
+                {
+                    "name": "firstName",
+                    "type" : "text" ,
+                    "label" : "First name",
+                    "placeholder" : "Enter guests amount"
+                    ,
+                    "col" : 6,
+                    "disabled" : true
+                },
+                {
+                    "name": "lastName",
+                    "type" : "text" ,
+                    "label" : "Last name",
+                    "placeholder" : "Enter guests amount"
+                    ,
+                    "col" : 6,
+                    
+                    "disabled" : true
+                },
+                {
+                    "name": "roll",
+                    "type" : "select" ,
+                    "label" : "Who is",
+                    "options" : ["Groom" ,"Bride"],
+                     "col" : 6
+                     
+                },
+                {
+                    "name": "phone",
+                    "type" : "tel" ,
+                    "label" : "Phone number",
+                    "placeholder" : "Enter phone number",
+                    "col" : 6,
+                    "disabled" : true
+
+                }
+             ]
+         },
+        {
+            "name": "image",
+            "type" : "file" ,
+            "label" : "Background event Image",
+            "placeholder" : "Choose the image for the event"
+        }
+        
+       ]
+    },
+    "settings" :{
+        "title" : "The settings",
+        "button" : "Send",
+        "method" : "updateEvent",
+
+       "image":"https://storage.googleapis.com/events-confirmation/storage/createEvent.png",
+       "inputs" :[
+        {
+            "name": "guestAmount",
+            "type" : "number" ,
+            "label" : "Guest's Amount",
+            "placeholder" : "Enter guests amount"
+        },
+        {
+            "name": "maxBudget",
+            "type" : "number" ,
+            "label" : "Maximum Budget",
+            "placeholder" : "Enter guests amount"
+        },
+        {
+            "name": "reserve",
+            "type" : "number" ,
+            "label" : "Reserve sits amount",
+            "placeholder" : "Enter guests amount"
+        },
+        {
+            "name": "tableSits",
+            "type" : "number" ,
+            "label" : "Table sits amount",
+            "placeholder" : "12.."
+        },
+        {
+            "name": "knightsTableSits",
+            "type" : "number" ,
+            "label" : "knights Table  sits amount",
+            "placeholder" : "25.."
+        }
+        
+        
+       ]
+    }
+}
