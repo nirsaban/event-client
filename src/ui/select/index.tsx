@@ -3,7 +3,15 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 
-export function MDSelect({ register, label, options, handleChange, value, name }) {
+export function MDSelect({
+  register,
+  label,
+  options,
+  handleChange,
+  value,
+  name,
+  errors,
+}) {
   return (
     <>
       <InputLabel
@@ -16,6 +24,8 @@ export function MDSelect({ register, label, options, handleChange, value, name }
       </InputLabel>
       <Select
         {...register(name)}
+        helperText={errors[name] && (errors[name].message as string)}
+        error={!!errors[name]}
         sx={{ marginBottom: "5px" }}
         labelId="demo-simple-select-required-label"
         id="demo-simple-select-required"
@@ -26,6 +36,7 @@ export function MDSelect({ register, label, options, handleChange, value, name }
         fullWidth
         margin="none"
         name={name}
+        defaultValue={"wedding"}
       >
         {options &&
           options.map((option) => {

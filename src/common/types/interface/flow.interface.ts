@@ -22,6 +22,10 @@ export class PlannersProps extends State {
   lastName: string;
   phone: string;
   roll: RollEnum;
+  firstNameB: string;
+  lastNameB: string;
+  phoneB: string;
+  rollB: RollEnum;
   image: string;
 }
 

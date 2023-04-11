@@ -7,7 +7,10 @@ import {
 import { UIInput } from "../../../ui/input";
 import { useOutletContext } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { UsersEntity, flowOrder } from "../../../common/types/entites/user.entity";
+import {
+  UsersEntity,
+  flowOrder,
+} from "../../../common/types/entites/user.entity";
 import { RootState } from "../../../redux/store";
 import { Button } from "@mui/material";
 import { InputDate } from "../../../ui/input/inputDate";
@@ -20,8 +23,17 @@ import { schemas } from "../flow.schemas";
 const schema: ZodType<Partial<CreateEventProps>> = schemas.createEvent;
 type ValidationSchema = z.infer<typeof schema>;
 
-export const CreateEvent = ({ back, step, next, handleChange, parentState, handleChangeDate }) => {
-  const userState: UsersEntity = useSelector((state: RootState) => state.user.user);
+export const CreateEvent = ({
+  back,
+  step,
+  next,
+  handleChange,
+  parentState,
+  handleChangeDate,
+}) => {
+  const userState: UsersEntity = useSelector(
+    (state: RootState) => state.user.user
+  );
 
   const {
     register,
@@ -32,30 +44,30 @@ export const CreateEvent = ({ back, step, next, handleChange, parentState, handl
   });
 
   const inputs = [
-    // {
-    //   name: "type",
-    //   type: "select",
-    //   label: "The event Kind",
-    //   options: ["weeding", "other"],
-    //   handleChange: handleChange,
-    //   register: (name: string) => register("type"),
-    // },
-    // {
-    //   name: "date",
-    //   type: "date",
-    //   label: "Date",
-    //   placeholder: "Enter Date",
-    //   handleChange: handleChange,
-    //   register: (name: string) => register("date"),
-    // },
-    // {
-    //   name: "time",
-    //   type: "time",
-    //   label: "Time",
-    //   placeholder: "Enter Time",
-    //   handleChange: handleChange,
-    //   register: (name: string) => register("time"),
-    // },
+    {
+      name: "type",
+      type: "select",
+      label: "The event Kind",
+      options: ["weeding", "other"],
+      handleChange: handleChange,
+      register: (name: string) => register("type"),
+    },
+    {
+      name: "date",
+      type: "date",
+      label: "Date",
+      placeholder: "Enter Date",
+      handleChange: handleChange,
+      register: (name: string) => register("date"),
+    },
+    {
+      name: "time",
+      type: "time",
+      label: "Time",
+      placeholder: "Enter Time",
+      handleChange: handleChange,
+      register: (name: string) => register("time"),
+    },
     {
       name: "locationName",
       type: "text",
@@ -77,11 +89,13 @@ export const CreateEvent = ({ back, step, next, handleChange, parentState, handl
   const renderInputs = (inputs: InputFlow[]): JSX.Element[] => {
     return inputs.map((input) => {
       input.defaultValue = (userState && userState[input.name]) || undefined;
-      input.value = (parentState.createEvent && parentState.createEvent[input.name]) || undefined;
+      input.value =
+        (parentState.createEvent && parentState.createEvent[input.name]) ||
+        undefined;
       return (
         <UIInput
           {...input}
-          errors={parentState.errors}
+          errors={errors}
           handleChange={handleChange}
           handleChangeDate={handleChangeDate}
         />
@@ -104,13 +118,20 @@ export const CreateEvent = ({ back, step, next, handleChange, parentState, handl
           sx={{
             display: "flex",
             padding: 1,
-            justifyContent: `${flowOrder.indexOf(step) > 1 ? "space-between" : "center"}`,
+            justifyContent: `${
+              flowOrder.indexOf(step) > 1 ? "space-between" : "center"
+            }`,
             margin: "auto auto",
           }}
         >
           <Box>
             {flowOrder.indexOf(step) > 1 ? (
-              <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} onClick={back}>
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={back}
+              >
                 Back
               </Button>
             ) : (
@@ -119,11 +140,21 @@ export const CreateEvent = ({ back, step, next, handleChange, parentState, handl
           </Box>
           <Box>
             {flowOrder.indexOf(step) === flowOrder.length - 2 ? (
-              <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
                 Finish and Submit
               </Button>
             ) : (
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
                 Next
               </Button>
             )}

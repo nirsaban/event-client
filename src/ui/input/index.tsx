@@ -1,10 +1,20 @@
 import { Box, Grid, TextField } from "@mui/material";
 
-import React, { ChangeEventHandler, Fragment, ReactElement, ReactNode } from "react";
+import React, {
+  ChangeEventHandler,
+  Fragment,
+  ReactElement,
+  ReactNode,
+} from "react";
 import { MDSelect } from "../select";
 import { IsraeliPhoneNumberInput } from "./inputPhone";
 import { z, ZodType } from "zod";
-import { UseFormRegister, FormState, UseFormRegisterReturn, FieldErrors } from "react-hook-form";
+import {
+  UseFormRegister,
+  FormState,
+  UseFormRegisterReturn,
+  FieldErrors,
+} from "react-hook-form";
 import { InputDate } from "./inputDate";
 export type UIInputProps = {
   name: string;
@@ -20,7 +30,10 @@ export type UIInputProps = {
   disabled?: boolean;
   handleChangeDate?: (value: any, name: string) => void;
   errors?: FieldErrors;
-  register?: (name: string, RegisterOptions?) => { onChange; onBlur; name; ref };
+  register?: (
+    name: string,
+    RegisterOptions?
+  ) => { onChange; onBlur; name; ref };
 };
 
 export function UIInput({
@@ -32,11 +45,17 @@ export function UIInput({
 }: UIInputProps): ReactElement<UIInputProps> {
   const renderInput = (rest): JSX.Element => {
     if (rest.type == "select") {
-      return <MDSelect {...rest} handleChange={handleChange} register={register} />;
+      return (
+        <MDSelect
+          {...rest}
+          handleChange={handleChange}
+          register={register}
+          errors={errors}
+        />
+      );
     }
 
     if (rest.type == "text" || rest.type == "password") {
-      console.log(errors);
       return (
         <Grid item xs={12}>
           <TextField
@@ -54,7 +73,9 @@ export function UIInput({
             autoFocus
             defaultValue={rest.defaultValue}
             value={rest.value}
-            helperText={errors[rest.name] && (errors[rest.name].message as string)}
+            helperText={
+              errors[rest.name] && (errors[rest.name].message as string)
+            }
             error={!!errors[rest.name]}
             onChange={handleChange}
           />

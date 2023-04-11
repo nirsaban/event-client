@@ -1,11 +1,23 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserFlow, UsersEntity, flowOrder } from "../../common/types/entites/user.entity";
+import {
+  UserFlow,
+  UsersEntity,
+  flowOrder,
+} from "../../common/types/entites/user.entity";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import flow from "../flow.json";
 import { ThemeProvider } from "@emotion/react";
-import { Grid, CssBaseline, Paper, Box, Typography, Button, createTheme } from "@mui/material";
+import {
+  Grid,
+  CssBaseline,
+  Paper,
+  Box,
+  Typography,
+  Button,
+  createTheme,
+} from "@mui/material";
 import { setUser } from "../../redux/userSlice";
 import {
   ConfirmDetailsProps,
@@ -19,7 +31,6 @@ import { Planners } from "./components/Planners";
 import { Settings } from "./components/Settings";
 import { FieldErrors, useForm } from "react-hook-form";
 import { ZodType } from "zod";
-import { schemas } from "./flow.schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 export class State {
@@ -31,7 +42,7 @@ export class State {
 export class FlowPageState extends State {
   confirmDetails: ConfirmDetailsProps;
   createEvent: CreateEventProps;
-  planners: PlannersProps[];
+  planners: PlannersProps;
   setting: SettingsProps;
   zodSchema: any;
 }
@@ -39,7 +50,7 @@ export class FlowPageState extends State {
 const initState: FlowPageState & State = {
   confirmDetails: {} as ConfirmDetailsProps,
   createEvent: {} as CreateEventProps,
-  planners: [] as PlannersProps[],
+  planners: {} as PlannersProps,
   setting: {} as SettingsProps,
   errors: {} as FieldErrors<ZodFlowType>,
   step: "",
@@ -47,7 +58,11 @@ const initState: FlowPageState & State = {
   zodSchema: null,
 };
 
-type ZodFlowType = ConfirmDetailsProps | CreateEventProps | PlannersProps | SettingsProps;
+type ZodFlowType =
+  | ConfirmDetailsProps
+  | CreateEventProps
+  | PlannersProps
+  | SettingsProps;
 
 const theme = createTheme();
 
@@ -62,14 +77,20 @@ const getStep = (flow: UserFlow): keyof UserFlow => {
 const schema: ZodType<Partial<ConfirmDetailsProps>> = z.object({
   firstName: z.string().min(2).max(20).nonempty(),
   lastName: z.string().min(2).max(20).nonempty(),
-  phone: z.string().regex(/^0\d([\d]{0,1})([-]{0,1})\d{7}$/, "invalid phone number"),
+  phone: z
+    .string()
+    .regex(/^0\d([\d]{0,1})([-]{0,1})\d{7}$/, "invalid phone number"),
 });
 
 type ValidationSchema = z.infer<typeof schema>;
 export const FlowPage = () => {
-  const userState: UsersEntity = useSelector((state: RootState) => state.user.user);
+  const userState: UsersEntity = useSelector(
+    (state: RootState) => state.user.user
+  );
   const [step, setStep] = useState(getStep(userState.flow));
-  const [parentState, setParentState] = useState<FlowPageState | null>(initState);
+  const [parentState, setParentState] = useState<FlowPageState | null>(
+    initState
+  );
   const [component, setComponent] = useState(null);
 
   const {
@@ -102,7 +123,10 @@ export const FlowPage = () => {
   };
 
   const handleChangeDate = (value: any, name: string) => {
-    const stateValue = name === "date" ? new Date(value.$d).getTime() : `${value.$H}:${value.$m}`;
+    const stateValue =
+      name === "date"
+        ? new Date(value.$d).getTime()
+        : `${value.$H}:${value.$m}`;
 
     setParentState((prevState) => ({
       ...prevState,
@@ -114,8 +138,9 @@ export const FlowPage = () => {
   };
 
   const next = <T,>(data: T) => {
-    alert("HERE");
-    dispatch(setUser({ ...userState, flow: { ...userState.flow, [step]: true } }));
+    dispatch(
+      setUser({ ...userState, flow: { ...userState.flow, [step]: true } })
+    );
 
     setStep(getStep({ ...userState.flow, [step]: true }));
   };
@@ -128,7 +153,10 @@ export const FlowPage = () => {
     const prevStep = flowOrder[currentStepIndex - 1];
 
     dispatch(
-      setUser({ ...userState, flow: { ...userState.flow, [step]: false, [prevStep]: false } })
+      setUser({
+        ...userState,
+        flow: { ...userState.flow, [step]: false, [prevStep]: false },
+      })
     );
 
     setStep(getStep({ ...userState.flow, [step]: false, [prevStep]: false }));
@@ -136,15 +164,15 @@ export const FlowPage = () => {
 
   const getComponent = () => {
     switch (typeof step == "string") {
-      case step === "confirmDetails":
-        return (
-          <ConfirmDetails
-            handleChange={handleChange}
-            parentState={parentState}
-            next={next}
-            step={step}
-          />
-        );
+      // case step === "confirmDetails":
+      //   return (
+      //     <ConfirmDetails
+      //       handleChange={handleChange}
+      //       parentState={parentState}
+      //       next={next}
+      //       step={step}
+      //     />
+      //   );
       case step === "createEvent":
         return (
           <CreateEvent
@@ -152,29 +180,40 @@ export const FlowPage = () => {
             parentState={parentState}
             handleChangeDate={handleChangeDate}
             step={step}
+            next={next}
             back={back}
           />
         );
-      // case step === "planners":
-      //   return (
-      //     <Planners
-      //       errors={errors}
-      //       handleChange={handleChange}
-      //       parentState={parentState}
-      //       register={register}
-      //     />
-      //   );
+      case step === "planners":
+        return (
+          <Planners
+            handleChange={handleChange}
+            parentState={parentState}
+            step={step}
+            next={next}
+            back={back}
+          />
+        );
       // case step === "settings":
       //   return (
       //     <Settings
-      //       errors={errors}
+      //       step={step}
+      //       next={next}
+      //       back={back}
       //       handleChange={handleChange}
       //       parentState={parentState}
-      //       register={register}
       //     />
       //   );
       default:
-        navigate("/home");
+        return (
+          <Planners
+            handleChange={handleChange}
+            parentState={parentState}
+            step={step}
+            next={next}
+            back={back}
+          />
+        );
     }
   };
 
@@ -192,12 +231,22 @@ export const FlowPage = () => {
             backgroundImage: `url(${step && flow[step]?.image})`,
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
-              t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],
+              t.palette.mode === "light"
+                ? t.palette.grey[50]
+                : t.palette.grey[900],
             backgroundSize: "cover",
             backgroundPosition: "top",
           }}
         />
-        <Grid item xs={12} sm={8} md={6} component={Paper} elevation={12} square>
+        <Grid
+          item
+          xs={12}
+          sm={8}
+          md={6}
+          component={Paper}
+          elevation={12}
+          square
+        >
           <Box
             sx={{
               my: 12,
