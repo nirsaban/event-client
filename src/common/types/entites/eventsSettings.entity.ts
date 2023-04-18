@@ -1,5 +1,5 @@
 export class EventsSettingsEntity {
-  id: string;
+  id?: string;
 
   guestAmount: number;
 

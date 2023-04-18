@@ -1,4 +1,4 @@
-import { GuestStatusEnum } from "../enum/guestStatus.enum";
+import { GuestStatusEnum } from '../enum/guestStatus.enum';
 
 export class GuestEntity {
   id: string;

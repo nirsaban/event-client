@@ -1,20 +1,15 @@
-import { EventsEntity } from "./events.entity";
+import { EventsEntity } from './events.entity';
 
 export class UserFlow {
   register: boolean;
   confirmDetails: boolean;
   createEvent: boolean;
   onGoing: boolean;
+  planners: boolean;
+  settings: boolean;
 }
 
-export const flowOrder: string[] = [
-  "register",
-  "createEvent",
-  "confirmDetails",
-  "planners",
-  "settings",
-  "onGoing",
-];
+export const flowOrder: string[] = ['register', 'confirmDetails', 'createEvent', 'planners', 'settings', 'onGoing'];
 
 export class UsersEntity {
   id: string;

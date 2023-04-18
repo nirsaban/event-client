@@ -1,9 +1,9 @@
-import { GuestEntity } from "./guest.entity";
+import { GuestEntity } from './guest.entity';
 
 export enum TableTypeEnum {
-  knights = "knights",
-  regular = "regular",
-  reserve = "reserve",
+  knights = 'knights',
+  regular = 'regular',
+  reserve = 'reserve'
 }
 
 export class TablesEntity {

@@ -1,9 +1,8 @@
-import React, { Fragment, ReactNode } from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import { Routes, Route, Navigate } from "react-router-dom";
-import { routes } from "./routes";
-import { LoginPage } from "./pages/auth/login";
+import React, { Fragment, ReactNode } from 'react';
+import './App.css';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { routes } from './routes';
+import { LoginPage } from './pages/auth/login';
 
 function App() {
   const getRoutes = (): ReactNode => {

@@ -1,7 +1,8 @@
-import { ChangeEventHandler } from "react";
-import { EventTypeEnum, RollEnum } from "../../../pages/flow/components/Planners";
-import { State } from "../../../pages/flow/flow";
-import { EventType } from "../enum/eventType.enum";
+import { ChangeEventHandler } from 'react';
+import { EventTypeEnum } from '../../../pages/flow/components/Planners';
+import { State } from '../../../pages/flow/flow';
+import { EventType } from '../enum/eventType.enum';
+import { RollEnum } from '../enum/roll.enum';
 
 export class ConfirmDetailsProps extends State {
   firstName: string;
@@ -26,15 +27,15 @@ export class PlannersProps extends State {
   lastNameB: string;
   phoneB: string;
   rollB: RollEnum;
-  image: string;
+  image: File;
 }
 
 export class SettingsProps extends State {
-  guestAmount: number;
-  maxBudget: number;
-  reserve: number;
-  tableSits: number;
-  knightsTableSits: number;
+  guestAmount: string;
+  maxBudget: string;
+  reserve: string;
+  tableSits: string;
+  knightsTableSits: string;
 }
 
 export class InputFlow {

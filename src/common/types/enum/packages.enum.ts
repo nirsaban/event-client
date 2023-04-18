@@ -1,5 +1,5 @@
 export enum PackagesEnum {
-  basic = "basic",
-  medium = "medium",
-  pro = "pro",
+  basic = 'basic',
+  medium = 'medium',
+  pro = 'pro'
 }

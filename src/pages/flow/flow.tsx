@@ -1,68 +1,53 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  UserFlow,
-  UsersEntity,
-  flowOrder,
-} from "../../common/types/entites/user.entity";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
-import flow from "../flow.json";
-import { ThemeProvider } from "@emotion/react";
-import {
-  Grid,
-  CssBaseline,
-  Paper,
-  Box,
-  Typography,
-  Button,
-  createTheme,
-} from "@mui/material";
-import { setUser } from "../../redux/userSlice";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserFlow, UsersEntity, flowOrder } from '../../common/types/entites/user.entity';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import flow from '../flow.json';
+import { ThemeProvider } from '@emotion/react';
+import { Grid, TextField, CssBaseline, Paper, Box, Typography, Button, createTheme } from '@mui/material';
+import { setUser } from '../../redux/userSlice';
 import {
   ConfirmDetailsProps,
   CreateEventProps,
   PlannersProps,
-  SettingsProps,
-} from "../../common/types/interface/flow.interface";
-import { ConfirmDetails } from "./components/confirmDetails";
-import { CreateEvent } from "./components/CreateEvent";
-import { Planners } from "./components/Planners";
-import { Settings } from "./components/Settings";
-import { FieldErrors, useForm } from "react-hook-form";
-import { ZodType } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+  SettingsProps
+} from '../../common/types/interface/flow.interface';
+import { ConfirmDetails } from './components/confirmDetails';
+import { CreateEvent } from './components/CreateEvent';
+import { Planners } from './components/Planners';
+import { Settings } from './components/Settings';
+import { FieldErrors, useForm } from 'react-hook-form';
+import { ZodType } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { EventEntity } from '../../common/types/entites/events.entity';
+import { ApiServices } from '../../api/apiService';
+
 export class State {
   errors: FieldErrors<ZodFlowType>;
-  step: string;
   prevState: null;
 }
-
+interface HTMLInputEvent extends Event {
+  target: HTMLInputElement & EventTarget;
+}
 export class FlowPageState extends State {
   confirmDetails: ConfirmDetailsProps;
   createEvent: CreateEventProps;
   planners: PlannersProps;
-  setting: SettingsProps;
-  zodSchema: any;
+  settings: SettingsProps;
 }
 
 const initState: FlowPageState & State = {
   confirmDetails: {} as ConfirmDetailsProps,
   createEvent: {} as CreateEventProps,
   planners: {} as PlannersProps,
-  setting: {} as SettingsProps,
+  settings: {} as SettingsProps,
   errors: {} as FieldErrors<ZodFlowType>,
-  step: "",
-  prevState: null,
-  zodSchema: null,
+  prevState: null
 };
 
-type ZodFlowType =
-  | ConfirmDetailsProps
-  | CreateEventProps
-  | PlannersProps
-  | SettingsProps;
+type ZodFlowType = ConfirmDetailsProps | CreateEventProps | PlannersProps | SettingsProps;
 
 const theme = createTheme();
 
@@ -72,35 +57,16 @@ const getStep = (flow: UserFlow): keyof UserFlow => {
       return step as keyof UserFlow;
     }
   }
-  return "onGoing";
+  return 'onGoing';
 };
-const schema: ZodType<Partial<ConfirmDetailsProps>> = z.object({
-  firstName: z.string().min(2).max(20).nonempty(),
-  lastName: z.string().min(2).max(20).nonempty(),
-  phone: z
-    .string()
-    .regex(/^0\d([\d]{0,1})([-]{0,1})\d{7}$/, "invalid phone number"),
-});
 
-type ValidationSchema = z.infer<typeof schema>;
 export const FlowPage = () => {
-  const userState: UsersEntity = useSelector(
-    (state: RootState) => state.user.user
-  );
+  const userState: UsersEntity = useSelector((state: RootState) => state.user.user);
   const [step, setStep] = useState(getStep(userState.flow));
-  const [parentState, setParentState] = useState<FlowPageState | null>(
-    initState
-  );
+  const [parentState, setParentState] = useState<FlowPageState | null>(initState);
   const [component, setComponent] = useState(null);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ValidationSchema>({
-    resolver: zodResolver(schema),
-  });
-
+  const [settings, setSettings] = useState({});
+  const [file, setFile] = useState(null);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -111,38 +77,101 @@ export const FlowPage = () => {
     }
   }, [step]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+  useEffect(() => {
+    console.log(parentState);
+  }, [parentState]);
+
+  const handleChange = (event: HTMLInputEvent) => {
+    const { name, value, files } = event.target;
+    if (name == 'image') {
+      setFile(files[0]);
+    }
+    console.log(name, value);
+
     setParentState((prevState) => ({
       ...prevState,
       [step]: {
-        ...prevState[step],
         [name]: value,
-      },
+        ...prevState[step]
+      }
+    }));
+  };
+
+  const onChangeTest = (event: HTMLInputEvent) => {
+    const { name, value, files } = event.target;
+
+    setSettings((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
+
+    setParentState((prevState) => ({
+      ...prevState,
+      [step]: {
+        [name]: value,
+        ...prevState[step]
+      }
     }));
   };
 
   const handleChangeDate = (value: any, name: string) => {
-    const stateValue =
-      name === "date"
-        ? new Date(value.$d).getTime()
-        : `${value.$H}:${value.$m}`;
+    const stateValue = name === 'date' ? new Date(value.$d).getTime() : `${value.$H}:${value.$m}`;
 
     setParentState((prevState) => ({
       ...prevState,
       [step]: {
         ...prevState[step],
-        [name]: stateValue,
-      },
+        [name]: stateValue
+      }
     }));
   };
 
-  const next = <T,>(data: T) => {
-    dispatch(
-      setUser({ ...userState, flow: { ...userState.flow, [step]: true } })
-    );
+  const next = async <T,>(data: T) => {
+    if (flowOrder.indexOf(step) === flowOrder.length - 2) {
+      await hundleSubmit();
+    } else {
+      setStep(getStep({ ...userState.flow, [step]: true }));
+      dispatch(
+        setUser({
+          ...userState,
+          phone: parentState.confirmDetails.phone || userState.phone,
+          flow: { ...userState.flow, [step]: true }
+        })
+      );
+    }
+  };
+  const hundleSubmit = async () => {
+    const apiService = new ApiServices();
 
-    setStep(getStep({ ...userState.flow, [step]: true }));
+    var formData = new FormData();
+
+    for (const key of Object.keys(file)) {
+      formData.append('image', file[key]);
+    }
+
+    for (let i in parentState.createEvent) {
+      formData.append(i, parentState.createEvent[i]);
+    }
+
+    const plannerA = {};
+    const plannerB = {};
+    for (let prop in parentState.planners) {
+      if (prop.endsWith('B')) {
+        plannerA[prop] = parentState.planners[prop];
+      } else {
+        plannerB[prop] = parentState.planners[prop];
+      }
+    }
+
+    formData.append('planners', JSON.stringify([plannerA, plannerB]));
+
+    const userUpdates = await apiService.loginOrRegister(parentState.confirmDetails);
+
+    const event = await apiService.createEvent(formData);
+
+    const settings: SettingsProps = parentState.settings;
+
+    const eventSettings = await apiService.evnetSettings(event.id, settings);
   };
 
   const back = (e) => {
@@ -155,7 +184,7 @@ export const FlowPage = () => {
     dispatch(
       setUser({
         ...userState,
-        flow: { ...userState.flow, [step]: false, [prevStep]: false },
+        flow: { ...userState.flow, [step]: false, [prevStep]: false }
       })
     );
 
@@ -163,17 +192,12 @@ export const FlowPage = () => {
   };
 
   const getComponent = () => {
-    switch (typeof step == "string") {
-      // case step === "confirmDetails":
-      //   return (
-      //     <ConfirmDetails
-      //       handleChange={handleChange}
-      //       parentState={parentState}
-      //       next={next}
-      //       step={step}
-      //     />
-      //   );
-      case step === "createEvent":
+    switch (typeof step == 'string') {
+      case step === 'confirmDetails':
+        return (
+          <ConfirmDetails handleChange={handleChange} parentState={parentState} next={next} step={step} back={back} />
+        );
+      case step === 'createEvent':
         return (
           <CreateEvent
             handleChange={handleChange}
@@ -184,7 +208,7 @@ export const FlowPage = () => {
             back={back}
           />
         );
-      case step === "planners":
+      case step === 'planners':
         return (
           <Planners
             handleChange={handleChange}
@@ -192,34 +216,28 @@ export const FlowPage = () => {
             step={step}
             next={next}
             back={back}
+            setParentState={setParentState}
           />
         );
-      // case step === "settings":
-      //   return (
-      //     <Settings
-      //       step={step}
-      //       next={next}
-      //       back={back}
-      //       handleChange={handleChange}
-      //       parentState={parentState}
-      //     />
-      //   );
+      case step === 'settings':
+        return (
+          <Settings
+            handleChange={handleChange}
+            parentState={parentState}
+            step={step}
+            next={next}
+            back={back}
+            setParentState={setParentState}
+          />
+        );
       default:
-        return (
-          <Planners
-            handleChange={handleChange}
-            parentState={parentState}
-            step={step}
-            next={next}
-            back={back}
-          />
-        );
+        navigate('/home');
     }
   };
 
   return component ? (
     <ThemeProvider theme={theme}>
-      <Grid container component="main" sx={{ height: "100vh" }}>
+      <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
 
         <Grid
@@ -229,31 +247,20 @@ export const FlowPage = () => {
           md={6}
           sx={{
             backgroundImage: `url(${step && flow[step]?.image})`,
-            backgroundRepeat: "no-repeat",
-            backgroundColor: (t) =>
-              t.palette.mode === "light"
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: "cover",
-            backgroundPosition: "top",
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: (t) => (t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900]),
+            backgroundSize: 'cover',
+            backgroundPosition: 'top'
           }}
         />
-        <Grid
-          item
-          xs={12}
-          sm={8}
-          md={6}
-          component={Paper}
-          elevation={12}
-          square
-        >
+        <Grid item xs={12} sm={8} md={6} component={Paper} elevation={12} square>
           <Box
             sx={{
               my: 12,
               mx: 8,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center'
             }}
           >
             <Typography component="h1" variant="h5">
@@ -267,12 +274,12 @@ export const FlowPage = () => {
                   sx={{
                     my: 2,
                     mx: 4,
-                    display: "flex",
-                    justifyContent: "center",
+                    display: 'flex',
+                    justifyContent: 'center'
                   }}
                 ></Box>
               ) : (
-                ""
+                ''
               )}
             </Grid>
           </Box>

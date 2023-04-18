@@ -1,5 +1,5 @@
-import { EventsEntity } from "../entites/events.entity";
-import { UsersEntity } from "./../entites/user.entity";
+import { EventsEntity } from '../entites/events.entity';
+import { UsersEntity } from './../entites/user.entity';
 
 export type InitialState = {
   user?: UsersEntity | null;

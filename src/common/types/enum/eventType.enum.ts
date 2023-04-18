@@ -1,4 +1,4 @@
 export enum EventType {
-  "weeding" = "weeding",
-  "other" = "other",
+  'weeding' = 'weeding',
+  'other' = 'other'
 }

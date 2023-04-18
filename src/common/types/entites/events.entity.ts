@@ -1,8 +1,10 @@
-import { PackagesEnum } from "../enum/packages.enum";
-import { EventsSettingsEntity } from "./eventsSettings.entity";
-import { GuestEntity } from "./guest.entity";
-import { GuestsCategoryEntity } from "./guestCategories.entity";
-import { TablesEntity } from "./tables.entity";
+import { EventType } from '../enum/eventType.enum';
+import { PackagesEnum } from '../enum/packages.enum';
+import { SettingsProps } from '../interface/flow.interface';
+import { EventsSettingsEntity } from './eventsSettings.entity';
+import { GuestEntity } from './guest.entity';
+import { GuestsCategoryEntity } from './guestCategories.entity';
+import { TablesEntity } from './tables.entity';
 
 export class EventsEntity {
   id: string;
@@ -16,6 +18,7 @@ export class EventsEntity {
   guestsCategory: GuestsCategoryEntity;
   tables: TablesEntity;
   guests: GuestEntity[];
+  settings: SettingsProps;
 }
 
 export class Planner {
@@ -32,4 +35,14 @@ class CreateEvent {
   guestsAmount: number;
   maxBudget: number;
   planner: Planner[];
+}
+export class EventEntity {
+  id?: string;
+  type: EventType;
+  date: number;
+  time: string;
+  locationName: string;
+  locationAddress: string;
+  planners: Planner[];
+  image: File;
 }

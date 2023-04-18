@@ -1,23 +1,15 @@
-import * as React from "react";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
+import * as React from 'react';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
-export function MDSelect({
-  register,
-  label,
-  options,
-  handleChange,
-  value,
-  name,
-  errors,
-}) {
+export function MDSelect({ register, label, options, handleChange, defaultValue, name, errors }): JSX.Element {
   return (
     <>
       <InputLabel
         sx={{
-          display: "flex",
-          justifyContent: "start",
+          display: 'flex',
+          justifyContent: 'start'
         }}
       >
         {label}
@@ -26,17 +18,17 @@ export function MDSelect({
         {...register(name)}
         helperText={errors[name] && (errors[name].message as string)}
         error={!!errors[name]}
-        sx={{ marginBottom: "5px" }}
+        sx={{ marginBottom: '5px' }}
         labelId="demo-simple-select-required-label"
         id="demo-simple-select-required"
-        value={value}
+        value={defaultValue}
         label={label}
         onChange={handleChange}
         required
         fullWidth
         margin="none"
         name={name}
-        defaultValue={"wedding"}
+        defaultValue={'Choose an Event'}
       >
         {options &&
           options.map((option) => {

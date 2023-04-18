@@ -1,12 +1,13 @@
-import { EventsEntity } from "./../common/types/entites/events.entity";
-import { UserFlow, UsersEntity } from "./../common/types/entites/user.entity";
-import { AxiosInstance } from "./../../node_modules/axios/index.d";
-import { Axios } from "axios";
-import { AxiosService } from "./axiosService";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store";
-import { setEvent } from "../redux/eventSlice";
-import store from "../redux/store";
+import { EventEntity, EventsEntity } from './../common/types/entites/events.entity';
+import { UserFlow, UsersEntity } from './../common/types/entites/user.entity';
+import { AxiosInstance } from './../../node_modules/axios/index.d';
+import { Axios } from 'axios';
+import { AxiosService } from './axiosService';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { setEvent } from '../redux/eventSlice';
+import store from '../redux/store';
+import { SettingsProps } from '../common/types/interface/flow.interface';
 
 const state = store.getState();
 
@@ -21,7 +22,7 @@ export class ApiServices {
 
   public async loginOrRegister(data?: Partial<UsersEntity>): Promise<UsersEntity> {
     try {
-      const response = await this.httpClient.post("/users", { ...data });
+      const response = await this.httpClient.post('/users', { ...data });
 
       return response.data as UsersEntity;
     } catch (error) {
@@ -31,7 +32,7 @@ export class ApiServices {
   public async updateUser(data: Partial<UsersEntity>, flow: UserFlow): Promise<UsersEntity> {
     try {
       data.flow = flow;
-      const response = await this.httpClient.put("/users", { ...data });
+      const response = await this.httpClient.put('/users', { ...data });
 
       return response.data as UsersEntity;
     } catch (error) {
@@ -39,17 +40,24 @@ export class ApiServices {
     }
   }
 
-  public async createEvent(data: EventsEntity, flow: UserFlow): Promise<UsersEntity> {
+  public async createEvent(data: FormData): Promise<EventEntity> {
     try {
-      const response = await this.httpClient.post("/events", { ...data });
+      const response = await this.httpClient.post('/events', data);
 
       store.dispatch(setEvent(response.data as EventsEntity));
 
-      const user = await this.updateUser({}, flow);
+      return response.data as EventEntity;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+  public async evnetSettings(eventId: string, data: SettingsProps): Promise<SettingsProps> {
+    try {
+      const response = await this.httpClient.post(`/events/${eventId}/settings`, { ...data });
 
-      user.events.push(response.data as EventsEntity);
+      store.dispatch(setEvent({ ...eventState, settings: response.data as SettingsProps }));
 
-      return user;
+      return response.data as SettingsProps;
     } catch (error) {
       throw new Error(error);
     }
@@ -61,7 +69,9 @@ export class ApiServices {
       const eventState: EventsEntity = state.event.event;
       return;
 
-      const response = await this.httpClient.put(`/events/${eventState.id}`, { ...data });
+      const response = await this.httpClient.put(`/events/${eventState.id}`, {
+        ...data
+      });
 
       const user = await this.updateUser({}, flow);
 

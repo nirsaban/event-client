@@ -1,10 +1,9 @@
-import React from "react";
-import { makeStyles } from "@mui/material";
-import { TextField } from "@mui/material";
-import { UIInputProps } from ".";
+import React from 'react';
+import { makeStyles } from '@mui/material';
+import { TextField } from '@mui/material';
+import { UIInputProps } from '.';
 
 export function IsraeliPhoneNumberInput({ errors, register, ...rest }: UIInputProps) {
-  console.log(register);
   return (
     <TextField
       {...register(rest.name)}
@@ -24,7 +23,7 @@ export function IsraeliPhoneNumberInput({ errors, register, ...rest }: UIInputPr
       placeholder="054-123-4567"
       inputProps={{
         maxLength: 10,
-        pattern: "^[0-9]{3}-[0-9]{3}-[0-9]{4}$",
+        pattern: '^[0-9]{3}-[0-9]{3}-[0-9]{4}$'
       }}
     />
   );
