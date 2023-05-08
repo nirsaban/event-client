@@ -1,3 +1,5 @@
+import { DashboardLayout } from '../layout/dashboard.layout';
+
 export const HomePage = () => {
-  return <>HOME</>;
+  return <DashboardLayout></DashboardLayout>;
 };

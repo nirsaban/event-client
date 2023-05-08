@@ -3,7 +3,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 
-export function MDSelect({ register, label, options, handleChange, defaultValue, name, errors }): JSX.Element {
+export function MDSelect({ register, label, options, handleChange, value, name, errors }): JSX.Element {
   return (
     <>
       <InputLabel
@@ -21,7 +21,7 @@ export function MDSelect({ register, label, options, handleChange, defaultValue,
         sx={{ marginBottom: '5px' }}
         labelId="demo-simple-select-required-label"
         id="demo-simple-select-required"
-        value={defaultValue}
+        value={value}
         label={label}
         onChange={handleChange}
         required

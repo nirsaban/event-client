@@ -1,9 +1,7 @@
 import { ChangeEventHandler } from 'react';
-import { EventTypeEnum } from '../../../pages/flow/components/Planners';
 import { State } from '../../../pages/flow/flow';
-import { EventType } from '../enum/eventType.enum';
+import { EventTypeEnum } from '../enum/eventType.enum';
 import { RollEnum } from '../enum/roll.enum';
-
 export class ConfirmDetailsProps extends State {
   firstName: string;
   lastName: string;
@@ -11,7 +9,7 @@ export class ConfirmDetailsProps extends State {
 }
 
 export class CreateEventProps extends State {
-  type: EventType;
+  type: EventTypeEnum;
   date: string;
   time: string;
   locationName: string;
@@ -28,9 +26,10 @@ export class PlannersProps extends State {
   phoneB: string;
   rollB: RollEnum;
   image: File;
+  file?: File;
 }
 
-export class SettingsProps extends State {
+export class SettingsProps {
   guestAmount: string;
   maxBudget: string;
   reserve: string;

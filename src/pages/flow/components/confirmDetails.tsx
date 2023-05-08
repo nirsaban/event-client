@@ -10,11 +10,15 @@ import { FormState, useForm } from 'react-hook-form';
 import { ZodType, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { schemas } from '../flow.schemas';
-
+import { useEffect } from 'react';
 const schema: ZodType<Partial<ConfirmDetailsProps>> = schemas.confirmDetails;
+
 type ValidationSchema = z.infer<typeof schema>;
 
-export const ConfirmDetails = ({ step, next, back, handleChange, parentState }) => {
+export const ConfirmDetails = ({ step, next, back, defaultState }) => {
+  const [state, setState] = useState<ConfirmDetailsProps | null>({ ...defaultState } as ConfirmDetailsProps);
+  const userState: UsersEntity = useSelector((state: RootState) => state.user.user);
+
   const {
     register,
     handleSubmit,
@@ -23,13 +27,21 @@ export const ConfirmDetails = ({ step, next, back, handleChange, parentState }) 
     resolver: zodResolver(schema)
   });
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
   const inputs = [
     {
       type: 'text',
       name: 'firstName',
       label: 'First Name',
       placeholder: 'Enter First Name',
-      handleChange: handleChange,
+      value: (state && state['firstName']) || userState['firstName'],
       register: (name: string) => register('firstName')
     },
     {
@@ -37,7 +49,7 @@ export const ConfirmDetails = ({ step, next, back, handleChange, parentState }) 
       type: 'text',
       label: 'Last Name',
       placeholder: 'Enter Last Name',
-      handleChange: handleChange,
+      value: (state && state['lastName']) || userState['lastName'],
       register: (name: string) => register('lastName')
     },
     {
@@ -45,34 +57,29 @@ export const ConfirmDetails = ({ step, next, back, handleChange, parentState }) 
       type: 'tel',
       label: 'Phone number',
       placeholder: 'Enter phone number',
-      handleChange: handleChange,
+      value: (state && state['phone']) || userState['phone'],
       register: (name: string) => register('phone')
     }
   ] as unknown as InputFlow[];
-
-  const userState: UsersEntity = useSelector((state: RootState) => state.user.user);
-
-  const renderInputs = (inputs: InputFlow[]): JSX.Element[] => {
-    return inputs.map((input) => {
-      input.defaultValue =
-        parentState.confirmDetails && parentState.confirmDetails[input.name]
-          ? parentState.confirmDetails && parentState.confirmDetails[input.name]
-          : (userState && userState[input.name]) || undefined;
-
-      return <UIInput {...input} errors={errors} key={input.name} handleChange={handleChange} />;
-    });
-  };
 
   return (
     <>
       <Box
         component="form"
         noValidate
-        onSubmit={handleSubmit(() => next<ValidationSchema>())}
+        onSubmit={handleSubmit(() => next<ValidationSchema>(state))}
         sx={{ mt: 1 }}
         style={{ width: '85%' }}
       >
-        {renderInputs(inputs)}
+        {inputs.map((input) => {
+          return (
+            <>
+              <Grid item xs={12}>
+                <UIInput {...input} key={input.name} errors={errors} handleChange={handleChange} />
+              </Grid>
+            </>
+          );
+        })}
         <Grid
           container
           sx={{
@@ -84,7 +91,12 @@ export const ConfirmDetails = ({ step, next, back, handleChange, parentState }) 
         >
           <Box>
             {flowOrder.indexOf(step) > 1 ? (
-              <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} onClick={back}>
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={(e) => back<ValidationSchema>(e, state)}
+              >
                 Back
               </Button>
             ) : (

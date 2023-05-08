@@ -36,20 +36,10 @@ const signInWithFacebook = async () => {
   try {
     const response = await signInWithPopup(auth, facebookProvider);
 
-    setCookies(
-      'token',
-      await response.user.getIdToken(),
-      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getTime()
-    );
-    const timeHourString: string = new Date(Date.now() + 360000)
-      .getTime()
-      .toString();
+    setCookies('token', await response.user.getIdToken(), new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getTime());
+    const timeHourString: string = new Date(Date.now() + 360000).getTime().toString();
 
-    setCookies(
-      'token-time',
-      timeHourString,
-      new Date(Date.now() + 360000).getTime()
-    );
+    setCookies('token-time', timeHourString, new Date(Date.now() + 360000).getTime());
     return await new ApiServices().loginOrRegister({
       firstName: response.user.displayName
     });
@@ -62,20 +52,10 @@ const signInWithGoogle = async () => {
   try {
     const response = await signInWithPopup(auth, googleProvider);
 
-    setCookies(
-      'token',
-      await response.user.getIdToken(),
-      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getTime()
-    );
-    const timeHourString: string = new Date(Date.now() + 360000)
-      .getTime()
-      .toString();
+    setCookies('token', await response.user.getIdToken(), new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getTime());
+    const timeHourString: string = new Date(Date.now() + 360000).getTime().toString();
 
-    setCookies(
-      'token-time',
-      timeHourString,
-      new Date(Date.now() + 360000).getTime()
-    );
+    setCookies('token-time', timeHourString, new Date(Date.now() + 360000).getTime());
 
     return await new ApiServices().loginOrRegister({
       firstName: response.user.displayName
@@ -89,20 +69,10 @@ const logInWithEmailAndPassword = async ({ email, password }: LoginProps) => {
   try {
     const response = await signInWithEmailAndPassword(auth, email, password);
 
-    setCookies(
-      'token',
-      await response.user.getIdToken(),
-      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getTime()
-    );
-    const timeHourString: string = new Date(Date.now() + 360000)
-      .getTime()
-      .toString();
+    setCookies('token', await response.user.getIdToken(), new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getTime());
+    const timeHourString: string = new Date(Date.now() + 360000).getTime().toString();
 
-    setCookies(
-      'token-time',
-      timeHourString,
-      new Date(Date.now() + 360000).getTime()
-    );
+    setCookies('token-time', timeHourString, new Date(Date.now() + 360000).getTime());
     return await new ApiServices().loginOrRegister();
   } catch (err) {
     throw new Error(err);
@@ -115,26 +85,12 @@ const registerWithEmailAndPassword = async ({
   password
 }: RegisterProps): Promise<UsersEntity> => {
   try {
-    const response: UserCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+    const response: UserCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-    setCookies(
-      'token',
-      await response.user.getIdToken(),
-      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getTime()
-    );
-    const timeHourString: string = new Date(Date.now() + 360000)
-      .getTime()
-      .toString();
+    setCookies('token', await response.user.getIdToken(), new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getTime());
+    const timeHourString: string = new Date(Date.now() + 360000).getTime().toString();
 
-    setCookies(
-      'token-time',
-      timeHourString,
-      new Date(Date.now() + 360000).getTime()
-    );
+    setCookies('token-time', timeHourString, new Date(Date.now() + 360000).getTime());
     return await new ApiServices().loginOrRegister({
       firstName: name
     });
@@ -143,9 +99,4 @@ const registerWithEmailAndPassword = async ({
   }
 };
 
-export {
-  logInWithEmailAndPassword,
-  registerWithEmailAndPassword,
-  signInWithFacebook,
-  signInWithGoogle
-};
+export { logInWithEmailAndPassword, registerWithEmailAndPassword, signInWithFacebook, signInWithGoogle };

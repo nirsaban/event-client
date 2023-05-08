@@ -4,4 +4,5 @@ import { UsersEntity } from './../entites/user.entity';
 export type InitialState = {
   user?: UsersEntity | null;
   event?: EventsEntity | null;
+  loader?: boolean | null;
 };

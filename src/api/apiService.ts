@@ -42,6 +42,10 @@ export class ApiServices {
 
   public async createEvent(data: FormData): Promise<EventEntity> {
     try {
+      this.httpClient.defaults.headers = {
+        ...this.httpClient.defaults.headers,
+        'Content-Type': 'multipart/form-data'
+      };
       const response = await this.httpClient.post('/events', data);
 
       store.dispatch(setEvent(response.data as EventsEntity));
@@ -51,6 +55,7 @@ export class ApiServices {
       throw new Error(error);
     }
   }
+
   public async evnetSettings(eventId: string, data: SettingsProps): Promise<SettingsProps> {
     try {
       const response = await this.httpClient.post(`/events/${eventId}/settings`, { ...data });
@@ -62,6 +67,7 @@ export class ApiServices {
       throw new Error(error);
     }
   }
+
   public async updateEvent(data: EventsEntity, flow: UserFlow): Promise<UsersEntity> {
     try {
       const state = store.getState();

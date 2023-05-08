@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserFlow, UsersEntity, flowOrder } from '../../common/types/entites/user.entity';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import flow from '../flow.json';
+import flow from './flow.json';
 import { ThemeProvider } from '@emotion/react';
 import { Grid, TextField, CssBaseline, Paper, Box, Typography, Button, createTheme } from '@mui/material';
 import { setUser } from '../../redux/userSlice';
@@ -65,8 +65,6 @@ export const FlowPage = () => {
   const [step, setStep] = useState(getStep(userState.flow));
   const [parentState, setParentState] = useState<FlowPageState | null>(initState);
   const [component, setComponent] = useState(null);
-  const [settings, setSettings] = useState({});
-  const [file, setFile] = useState(null);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -77,105 +75,68 @@ export const FlowPage = () => {
     }
   }, [step]);
 
-  useEffect(() => {
-    console.log(parentState);
-  }, [parentState]);
-
-  const handleChange = (event: HTMLInputEvent) => {
-    const { name, value, files } = event.target;
-    if (name == 'image') {
-      setFile(files[0]);
-    }
-    console.log(name, value);
-
-    setParentState((prevState) => ({
-      ...prevState,
-      [step]: {
-        [name]: value,
-        ...prevState[step]
-      }
-    }));
-  };
-
-  const onChangeTest = (event: HTMLInputEvent) => {
-    const { name, value, files } = event.target;
-
-    setSettings((prevState) => ({
-      ...prevState,
-      [name]: value
-    }));
-
-    setParentState((prevState) => ({
-      ...prevState,
-      [step]: {
-        [name]: value,
-        ...prevState[step]
-      }
-    }));
-  };
-
-  const handleChangeDate = (value: any, name: string) => {
-    const stateValue = name === 'date' ? new Date(value.$d).getTime() : `${value.$H}:${value.$m}`;
-
-    setParentState((prevState) => ({
-      ...prevState,
-      [step]: {
-        ...prevState[step],
-        [name]: stateValue
-      }
-    }));
-  };
-
   const next = async <T,>(data: T) => {
+    setParentState((prevState) => ({
+      ...prevState,
+      [step]: data
+    }));
+
     if (flowOrder.indexOf(step) === flowOrder.length - 2) {
-      await hundleSubmit();
-    } else {
-      setStep(getStep({ ...userState.flow, [step]: true }));
-      dispatch(
-        setUser({
-          ...userState,
-          phone: parentState.confirmDetails.phone || userState.phone,
-          flow: { ...userState.flow, [step]: true }
-        })
-      );
+      await hundleSubmit<T>(data);
     }
+    setStep(getStep({ ...userState.flow, [step]: true }));
+    dispatch(
+      setUser({
+        ...userState,
+        phone: parentState.confirmDetails.phone || userState.phone,
+        flow: { ...userState.flow, [step]: true }
+      })
+    );
   };
-  const hundleSubmit = async () => {
+  const hundleSubmit = async <SettingsProps,>(data: SettingsProps) => {
     const apiService = new ApiServices();
 
     var formData = new FormData();
 
-    for (const key of Object.keys(file)) {
-      formData.append('image', file[key]);
+    if (parentState?.planners?.file) {
+      formData.append('file', parentState?.planners.file);
     }
 
     for (let i in parentState.createEvent) {
       formData.append(i, parentState.createEvent[i]);
     }
 
-    const plannerA = {};
-    const plannerB = {};
-    for (let prop in parentState.planners) {
-      if (prop.endsWith('B')) {
-        plannerA[prop] = parentState.planners[prop];
-      } else {
-        plannerB[prop] = parentState.planners[prop];
-      }
-    }
+    const plannerA = {
+      firstName: parentState.confirmDetails.firstName,
+      lastName: parentState.confirmDetails.lastName,
+      roll: parentState.planners.roll,
+      phone: parentState.planners.phoneB
+    };
+
+    const plannerB = {
+      firstName: parentState.planners.firstNameB,
+      lastName: parentState.planners.lastNameB,
+      roll: parentState.planners.rollB,
+      phone: parentState.planners.phoneB
+    };
 
     formData.append('planners', JSON.stringify([plannerA, plannerB]));
 
-    const userUpdates = await apiService.loginOrRegister(parentState.confirmDetails);
+    const [userUpdates, eventCreated]: [UsersEntity, EventEntity] = await Promise.all([
+      apiService.loginOrRegister(parentState.confirmDetails),
+      apiService.createEvent(formData)
+    ]);
 
-    const event = await apiService.createEvent(formData);
-
-    const settings: SettingsProps = parentState.settings;
-
-    const eventSettings = await apiService.evnetSettings(event.id, settings);
+    await apiService.evnetSettings(eventCreated.id, data);
   };
 
-  const back = (e) => {
+  const back = <T,>(e, state: T) => {
     e.preventDefault();
+
+    setParentState((prevState) => ({
+      ...prevState,
+      [step]: state
+    }));
 
     const currentStepIndex = flowOrder.indexOf(step);
 
@@ -194,42 +155,13 @@ export const FlowPage = () => {
   const getComponent = () => {
     switch (typeof step == 'string') {
       case step === 'confirmDetails':
-        return (
-          <ConfirmDetails handleChange={handleChange} parentState={parentState} next={next} step={step} back={back} />
-        );
+        return <ConfirmDetails next={next} step={step} back={back} defaultState={parentState.confirmDetails} />;
       case step === 'createEvent':
-        return (
-          <CreateEvent
-            handleChange={handleChange}
-            parentState={parentState}
-            handleChangeDate={handleChangeDate}
-            step={step}
-            next={next}
-            back={back}
-          />
-        );
+        return <CreateEvent step={step} next={next} back={back} defaultState={parentState.createEvent} />;
       case step === 'planners':
-        return (
-          <Planners
-            handleChange={handleChange}
-            parentState={parentState}
-            step={step}
-            next={next}
-            back={back}
-            setParentState={setParentState}
-          />
-        );
+        return <Planners step={step} next={next} back={back} defaultState={parentState.planners} />;
       case step === 'settings':
-        return (
-          <Settings
-            handleChange={handleChange}
-            parentState={parentState}
-            step={step}
-            next={next}
-            back={back}
-            setParentState={setParentState}
-          />
-        );
+        return <Settings step={step} next={next} back={back} defaultState={parentState.settings} />;
       default:
         navigate('/home');
     }

@@ -62,7 +62,7 @@ export function UIInput({
     } else if (rest.type == 'number') {
       return (
         <TextField
-          type={'text'}
+          type={rest.type}
           {...register(rest.name)}
           disabled={rest.disabled || false}
           key={rest.name}
@@ -72,6 +72,7 @@ export function UIInput({
           id={rest.name}
           label={rest.label}
           name={rest.name}
+          value={rest.value}
           autoFocus
           helperText={errors[rest.name] && (errors[rest.name].message as string)}
           error={!!errors[rest.name]}
@@ -97,6 +98,8 @@ export function UIInput({
         </Grid>
       );
     } else if (rest.type == 'date') {
+      return <InputDate {...rest} register={register} errors={errors} handleChangeDate={handleChangeDate} />;
+    } else if (rest.type == 'time') {
       return <InputDate {...rest} register={register} errors={errors} handleChangeDate={handleChangeDate} />;
     } else if (rest.type == 'file') {
       return (

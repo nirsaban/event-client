@@ -1,4 +1,4 @@
-import { EventType } from '../enum/eventType.enum';
+import { EventTypeEnum } from '../enum/eventType.enum';
 import { PackagesEnum } from '../enum/packages.enum';
 import { SettingsProps } from '../interface/flow.interface';
 import { EventsSettingsEntity } from './eventsSettings.entity';
@@ -8,7 +8,7 @@ import { TablesEntity } from './tables.entity';
 
 export class EventsEntity {
   id: string;
-  type: string;
+  type: EventTypeEnum;
   date: number;
   time: string;
   package: PackagesEnum;
@@ -38,7 +38,7 @@ class CreateEvent {
 }
 export class EventEntity {
   id?: string;
-  type: EventType;
+  type: EventTypeEnum;
   date: number;
   time: string;
   locationName: string;

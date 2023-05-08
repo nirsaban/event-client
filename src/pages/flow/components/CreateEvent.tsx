@@ -12,13 +12,21 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Box, Grid } from '@mui/material';
 import { schemas } from '../flow.schemas';
+import dayjs from 'dayjs';
 
 const schema: ZodType<Partial<CreateEventProps>> = schemas.createEvent;
 type ValidationSchema = z.infer<typeof schema>;
 
-export const CreateEvent = ({ back, step, next, handleChange, parentState, handleChangeDate }) => {
-  const userState: UsersEntity = useSelector((state: RootState) => state.user.user);
+const defaultDate = dayjs().add(1, 'day');
+const defaultTime = dayjs().hour(1).minute(30).second(0);
 
+export const CreateEvent = ({ back, step, next, defaultState }) => {
+  const userState: UsersEntity = useSelector((state: RootState) => state.user.user);
+  const [state, setState] = useState<CreateEventProps | null>({
+    ...defaultState,
+    dateRendering: defaultState.dateRendering || defaultDate,
+    timeRendering: defaultState.timeRendering || defaultTime
+  } as CreateEventProps);
   const {
     register,
     handleSubmit,
@@ -27,37 +35,66 @@ export const CreateEvent = ({ back, step, next, handleChange, parentState, handl
     resolver: zodResolver(schema)
   });
 
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleChangeDate = (value: any, name: string) => {
+    const stateValue = name === 'date' ? new Date(value.$d).getTime() : `${value.$H}:${value.$m}`;
+
+    setState((prevState) => ({
+      ...prevState,
+      [name]: stateValue,
+      [`${name}Rendering`]: value
+    }));
+  };
+
   const inputs = [
+    {
+      name: 'group',
+      inputs: [
+        {
+          name: 'date',
+          type: 'date',
+          label: 'Date',
+          placeholder: 'Enter Date',
+          handleChangeDate: handleChangeDate,
+          value: state && state['dateRendering'],
+          register: (name: string) => register('date')
+        },
+        {
+          name: 'time',
+          type: 'time',
+          label: 'Time',
+          placeholder: 'Enter Time',
+          handleChangeDate: handleChangeDate,
+          value: state && state['timeRendering'],
+          register: (name: string) => register('time')
+        }
+      ]
+    },
     {
       name: 'type',
       type: 'select',
       label: 'The event Kind',
       options: ['weeding', 'other'],
       handleChange: handleChange,
+      value: state && state['type'],
       register: (name: string) => register('type')
     },
-    {
-      name: 'date',
-      type: 'date',
-      label: 'Date',
-      placeholder: 'Enter Date',
-      handleChange: handleChange,
-      register: (name: string) => register('date')
-    },
-    {
-      name: 'time',
-      type: 'time',
-      label: 'Time',
-      placeholder: 'Enter Time',
-      handleChange: handleChange,
-      register: (name: string) => register('time')
-    },
+
     {
       name: 'locationName',
       type: 'text',
       label: 'Location name',
       placeholder: 'Enter Location name',
       handleChange: handleChange,
+      value: state && state['locationName'],
       register: (name: string) => register('locationName')
     },
     {
@@ -66,30 +103,37 @@ export const CreateEvent = ({ back, step, next, handleChange, parentState, handl
       label: 'Location address',
       placeholder: 'Hertzel 31',
       handleChange: handleChange,
+      value: state && state['locationAddress'],
       register: (name: string) => register('locationAddress')
     }
   ] as unknown as InputFlow[];
-
-  const renderInputs = (inputs: InputFlow[]): JSX.Element[] => {
-    return inputs.map((input) => {
-      input.defaultValue =
-        parentState.createEvent && parentState.createEvent[input.name]
-          ? parentState.createEvent && parentState.createEvent[input.name]
-          : (userState && userState[input.name]) || undefined;
-      return <UIInput {...input} errors={errors} handleChange={handleChange} handleChangeDate={handleChangeDate} />;
-    });
-  };
 
   return (
     <>
       <Box
         component="form"
         noValidate
-        onSubmit={handleSubmit(() => next<ValidationSchema>())}
+        onSubmit={handleSubmit(() => next<ValidationSchema>(state))}
         sx={{ mt: 1 }}
         style={{ width: '85%' }}
       >
-        {renderInputs(inputs)}
+        {inputs.map((input) => {
+          if (input.name == 'group') {
+            return (
+              <Grid container spacing={2}>
+                {input.inputs.map((input) => {
+                  return (
+                    <Grid item xs={input.col}>
+                      <UIInput errors={errors} {...input} />
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            );
+          } else {
+            return <UIInput errors={errors} {...input} />;
+          }
+        })}
         <Grid
           container
           sx={{
@@ -101,7 +145,12 @@ export const CreateEvent = ({ back, step, next, handleChange, parentState, handl
         >
           <Box>
             {flowOrder.indexOf(step) > 1 ? (
-              <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} onClick={back}>
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={(e) => back<ValidationSchema>(e, state)}
+              >
                 Back
               </Button>
             ) : (

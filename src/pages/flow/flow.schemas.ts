@@ -6,7 +6,7 @@ import {
   SettingsProps
 } from '../../common/types/interface/flow.interface';
 import { type } from 'os';
-import { EventType } from '../../common/types/enum/eventType.enum';
+import { EventTypeEnum } from '../../common/types/enum/eventType.enum';
 import { RollEnum } from '../../common/types/enum/roll.enum';
 type File = any;
 
@@ -20,6 +20,7 @@ export const schemas = {
       .nonempty()
   }) as ZodType<Partial<ConfirmDetailsProps>>,
   createEvent: z.object({
+    type: z.nativeEnum(EventTypeEnum),
     locationName: z.string().min(5).nonempty(),
     locationAddress: z.string().min(5).nonempty()
   }) as ZodType<Partial<CreateEventProps>>,
