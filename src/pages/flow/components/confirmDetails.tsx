@@ -11,6 +11,7 @@ import { ZodType, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { schemas } from '../flow.schemas';
 import { useEffect } from 'react';
+import { ButtonsFooter } from './buttons';
 const schema: ZodType<Partial<ConfirmDetailsProps>> = schemas.confirmDetails;
 
 type ValidationSchema = z.infer<typeof schema>;
@@ -39,24 +40,24 @@ export const ConfirmDetails = ({ step, next, back, defaultState }) => {
     {
       type: 'text',
       name: 'firstName',
-      label: 'First Name',
-      placeholder: 'Enter First Name',
+      label: 'שם פרטי',
+      placeholder: 'הזן שם פרטי',
       value: (state && state['firstName']) || userState['firstName'],
       register: (name: string) => register('firstName')
     },
     {
       name: 'lastName',
       type: 'text',
-      label: 'Last Name',
-      placeholder: 'Enter Last Name',
+      label: 'שם משפחה',
+      placeholder: 'הזן שם משפחה',
       value: (state && state['lastName']) || userState['lastName'],
       register: (name: string) => register('lastName')
     },
     {
       name: 'phone',
       type: 'tel',
-      label: 'Phone number',
-      placeholder: 'Enter phone number',
+      label: 'נייד',
+      placeholder: 'הזן מספר נייד',
       value: (state && state['phone']) || userState['phone'],
       register: (name: string) => register('phone')
     }
@@ -80,41 +81,7 @@ export const ConfirmDetails = ({ step, next, back, defaultState }) => {
             </>
           );
         })}
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            padding: 1,
-            justifyContent: `${flowOrder.indexOf(step) > 1 ? 'space-between' : 'center'}`,
-            margin: 'auto auto'
-          }}
-        >
-          <Box>
-            {flowOrder.indexOf(step) > 1 ? (
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={(e) => back<ValidationSchema>(e, state)}
-              >
-                Back
-              </Button>
-            ) : (
-              ''
-            )}
-          </Box>
-          <Box>
-            {flowOrder.indexOf(step) === flowOrder.length - 2 ? (
-              <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Finish and Submit
-              </Button>
-            ) : (
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Next
-              </Button>
-            )}
-          </Box>
-        </Grid>
+        {step ? <ButtonsFooter<ValidationSchema> state={state} back={back} step={step} /> : ''}
       </Box>
     </>
   );

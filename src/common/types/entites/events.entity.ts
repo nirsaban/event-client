@@ -7,18 +7,20 @@ import { GuestsCategoryEntity } from './guestCategories.entity';
 import { TablesEntity } from './tables.entity';
 
 export class EventsEntity {
-  id: string;
-  type: EventTypeEnum;
-  date: number;
-  time: string;
-  package: PackagesEnum;
-  locationName: string;
-  locationAddress: string;
-  eventsSettings: EventsSettingsEntity;
-  guestsCategory: GuestsCategoryEntity;
-  tables: TablesEntity;
-  guests: GuestEntity[];
-  settings: SettingsProps;
+  id?: string;
+  type?: EventTypeEnum;
+  date?: number;
+  time?: string;
+  package?: PackagesEnum;
+  locationName?: string;
+  locationAddress?: string;
+  image?: string;
+  guestsCategory?: GuestsCategoryEntity;
+  tables?: TablesEntity[];
+  eventsSettings?: EventsSettingsEntity;
+  guests?: GuestEntity[];
+  settings?: SettingsProps;
+  planners?: Planner[];
 }
 
 export class Planner {
@@ -35,14 +37,4 @@ class CreateEvent {
   guestsAmount: number;
   maxBudget: number;
   planner: Planner[];
-}
-export class EventEntity {
-  id?: string;
-  type: EventTypeEnum;
-  date: number;
-  time: string;
-  locationName: string;
-  locationAddress: string;
-  planners: Planner[];
-  image: File;
 }

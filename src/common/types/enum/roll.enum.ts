@@ -1,4 +1,4 @@
 export enum RollEnum {
-  Bride = 'Bride',
-  Groom = 'Groom'
+  חתן = 'חתן',
+  כלה = 'כלה'
 }

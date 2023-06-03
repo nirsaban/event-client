@@ -21,7 +21,6 @@ import { FieldErrors, useForm } from 'react-hook-form';
 import { ZodType } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { EventEntity } from '../../common/types/entites/events.entity';
 import { ApiServices } from '../../api/apiService';
 
 export class State {
@@ -62,7 +61,7 @@ const getStep = (flow: UserFlow): keyof UserFlow => {
 
 export const FlowPage = () => {
   const userState: UsersEntity = useSelector((state: RootState) => state.user.user);
-  const [step, setStep] = useState(getStep(userState.flow));
+  const [step, setStep] = useState<keyof UserFlow>(getStep(userState.flow));
   const [parentState, setParentState] = useState<FlowPageState | null>(initState);
   const [component, setComponent] = useState(null);
   const navigate = useNavigate();
@@ -122,12 +121,13 @@ export const FlowPage = () => {
 
     formData.append('planners', JSON.stringify([plannerA, plannerB]));
 
-    const [userUpdates, eventCreated]: [UsersEntity, EventEntity] = await Promise.all([
+    const [userUpdates, eventCreated]: [UsersEntity, EventsEntity] = await Promise.all([
       apiService.loginOrRegister(parentState.confirmDetails),
       apiService.createEvent(formData)
     ]);
-
-    await apiService.evnetSettings(eventCreated.id, data);
+    if (eventCreated) {
+      await apiService.evnetSettings(eventCreated, data);
+    }
   };
 
   const back = <T,>(e, state: T) => {

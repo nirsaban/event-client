@@ -13,6 +13,7 @@ import { useForm } from 'react-hook-form';
 import { Box, Grid } from '@mui/material';
 import { schemas } from '../flow.schemas';
 import dayjs from 'dayjs';
+import { ButtonsFooter } from './buttons';
 
 const schema: ZodType<Partial<CreateEventProps>> = schemas.createEvent;
 type ValidationSchema = z.infer<typeof schema>;
@@ -35,7 +36,6 @@ export const CreateEvent = ({ back, step, next, defaultState }) => {
     resolver: zodResolver(schema)
   });
 
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setState((prevState) => ({
@@ -46,7 +46,7 @@ export const CreateEvent = ({ back, step, next, defaultState }) => {
 
   const handleChangeDate = (value: any, name: string) => {
     const stateValue = name === 'date' ? new Date(value.$d).getTime() : `${value.$H}:${value.$m}`;
-
+    console.log(stateValue);
     setState((prevState) => ({
       ...prevState,
       [name]: stateValue,
@@ -61,7 +61,7 @@ export const CreateEvent = ({ back, step, next, defaultState }) => {
         {
           name: 'date',
           type: 'date',
-          label: 'Date',
+          label: 'תאריך',
           placeholder: 'Enter Date',
           handleChangeDate: handleChangeDate,
           value: state && state['dateRendering'],
@@ -70,7 +70,7 @@ export const CreateEvent = ({ back, step, next, defaultState }) => {
         {
           name: 'time',
           type: 'time',
-          label: 'Time',
+          label: 'שעה',
           placeholder: 'Enter Time',
           handleChangeDate: handleChangeDate,
           value: state && state['timeRendering'],
@@ -81,8 +81,8 @@ export const CreateEvent = ({ back, step, next, defaultState }) => {
     {
       name: 'type',
       type: 'select',
-      label: 'The event Kind',
-      options: ['weeding', 'other'],
+      label: 'סוג האירווע',
+      options: ['חתונה', 'אחר'],
       handleChange: handleChange,
       value: state && state['type'],
       register: (name: string) => register('type')
@@ -91,8 +91,8 @@ export const CreateEvent = ({ back, step, next, defaultState }) => {
     {
       name: 'locationName',
       type: 'text',
-      label: 'Location name',
-      placeholder: 'Enter Location name',
+      label: 'שם המקום',
+      placeholder: 'הזן את שם המקום',
       handleChange: handleChange,
       value: state && state['locationName'],
       register: (name: string) => register('locationName')
@@ -100,8 +100,7 @@ export const CreateEvent = ({ back, step, next, defaultState }) => {
     {
       name: 'locationAddress',
       type: 'text',
-      label: 'Location address',
-      placeholder: 'Hertzel 31',
+      label: 'כתובת המקום',
       handleChange: handleChange,
       value: state && state['locationAddress'],
       register: (name: string) => register('locationAddress')
@@ -134,41 +133,7 @@ export const CreateEvent = ({ back, step, next, defaultState }) => {
             return <UIInput errors={errors} {...input} />;
           }
         })}
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            padding: 1,
-            justifyContent: `${flowOrder.indexOf(step) > 1 ? 'space-between' : 'center'}`,
-            margin: 'auto auto'
-          }}
-        >
-          <Box>
-            {flowOrder.indexOf(step) > 1 ? (
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={(e) => back<ValidationSchema>(e, state)}
-              >
-                Back
-              </Button>
-            ) : (
-              ''
-            )}
-          </Box>
-          <Box>
-            {flowOrder.indexOf(step) === flowOrder.length - 2 ? (
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Finish and Submit
-              </Button>
-            ) : (
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Next
-              </Button>
-            )}
-          </Box>
-        </Grid>
+        {step ? <ButtonsFooter<ValidationSchema> state={state} back={back} step={step} /> : ''}
       </Box>
     </>
   );

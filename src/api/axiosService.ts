@@ -1,3 +1,4 @@
+"@ts-nocheck"
 import axios, { AxiosInstance, AxiosStatic, CreateAxiosDefaults } from 'axios';
 import Cookies from 'universal-cookie';
 import store from '../redux/store';
@@ -13,7 +14,7 @@ export class AxiosService {
   }
 
   private configAxiosInstance(): AxiosInstance {
-    const config: CreateAxiosDefaults = {
+    const config = {
       baseURL: this.baseUrl,
       headers: {
         'Content-type': 'application/json',

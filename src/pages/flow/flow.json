@@ -8,7 +8,7 @@
     },
 
     "createEvent" : {
-        "title" : "create event",
+        "title" : "צור אירוע",
          "button" : "Send",
          "method" : "createEvent",
 
@@ -17,7 +17,7 @@
             {
                 "name": "type",
                 "type" : "select" ,
-                "label" : "The event Kind",
+                "label" : "סוג האירווע",
                 "options" : ["weeding" ,"other"]
             },
             {
@@ -41,19 +41,19 @@
             {
                 "name": "locationName",
                 "type" : "text" ,
-                "label" : "Location name",
+                "label" : "שם המקום",
                 "placeholder" : "Enter Location name"
             },
             {
                 "name": "locationAddress",
                 "type" : "text" ,
-                "label" : "Location address",
+                "label" : "כתובת המקום",
                 "placeholder" : "Hertzel 31"
             }
         ]
     },
     "planners" :{
-        "title" : "The planners",
+        "title" : "כוכבי האירוע",
         "button" : "Send",
         "method" : "updateEvent",
 
@@ -65,29 +65,29 @@
                 {
                     "name": "firstNameB",
                     "type" : "text" ,
-                    "label" : "First name",
-                    "placeholder" : "Enter guests amount",
+                    "label" : "שם פרטי",
+                    "placeholder" : " הזן שם פרטי",
                     "col" : 6
                 },
                 {
                     "name": "lastNameB",
                     "type" : "text" ,
-                    "label" : "Last name",
-                    "placeholder" : "Enter guests amount",
+                    "label" : "שם משפחה ",
+                    "placeholder" : "הזן שם משפחה",
                     "col" : 6
                 },
                 {
                     "name": "rollB",
                     "type" : "select" ,
-                    "label" : "Who is",
-                    "options" : ["Groom" ,"Bride"],
+                    "label" : "חתן/כלה?",
+                    "options" : ["חתן" ,"כלה"],
                     "col" : 6
                 },
                 {
                     "name": "phoneB",
                     "type" : "tel" ,
-                    "label" : "Phone number",
-                    "placeholder" : "Enter phone number",
+                    "label" : "מספר טלפון",
+                    "placeholder" : "הזן מספר נייד",
                     "col" : 6
                 }
     
@@ -95,56 +95,49 @@
          },
          {
             "name" :"group",
-             "inputs" : [
+            "inputs" : [
                 {
                     "name": "firstName",
                     "type" : "text" ,
-                    "label" : "First name",
-                    "placeholder" : "Enter guests amount"
-                    ,
-                    "col" : 6,
-                    "disabled" : true
+                    "label" : "שם פרטי",
+                    "placeholder" : " הזן שם פרטי",
+                    "col" : 6
                 },
                 {
                     "name": "lastName",
                     "type" : "text" ,
-                    "label" : "Last name",
-                    "placeholder" : "Enter guests amount"
-                    ,
-                    "col" : 6,
-                    
-                    "disabled" : true
+                    "label" : "שם משפחה ",
+                    "placeholder" : "הזן שם משפחה",
+                    "col" : 6
                 },
                 {
                     "name": "roll",
                     "type" : "select" ,
-                    "label" : "Who is",
-                    "options" : ["Groom" ,"Bride"],
-                     "col" : 6
-                     
+                    "label" : "חתן/כלה?",
+                    "options" : ["חתן" ,"כלה"],
+                    "col" : 6
                 },
                 {
                     "name": "phone",
                     "type" : "tel" ,
-                    "label" : "Phone number",
-                    "placeholder" : "Enter phone number",
-                    "col" : 6,
-                    "disabled" : true
-
+                    "label" : "מספר טלפון",
+                    "placeholder" : "הזן מספר נייד",
+                    "col" : 6
                 }
+    
              ]
          },
         {
             "name": "image",
             "type" : "file" ,
-            "label" : "Background event Image",
+            "label" : "תמונת רקע לאירוע",
             "placeholder" : "Choose the image for the event"
         }
         
        ]
     },
     "settings" :{
-        "title" : "The settings",
+        "title" : "הגדרות אירוע נוספות",
         "button" : "Send",
         "method" : "updateEvent",
 
@@ -153,35 +146,34 @@
         {
             "name": "guestAmount",
             "type" : "number" ,
-            "label" : "Guest's Amount",
-            "placeholder" : "Enter guests amount"
-        },
-        {
-            "name": "maxBudget",
-            "type" : "number" ,
-            "label" : "Maximum Budget",
-            "placeholder" : "Enter guests amount"
+            "label" : "כמות אורחים",
+            "placeholder" : "הזן כמות אורחים"
         },
         {
             "name": "reserve",
             "type" : "number" ,
-            "label" : "Reserve sits amount",
-            "placeholder" : "Enter guests amount"
+            "label" : "כמות רזרבה",
+            "placeholder" : "הזן כמות אורחים"
         },
         {
             "name": "tableSits",
             "type" : "number" ,
-            "label" : "Table sits amount",
+            "label" : "מספר מקומות ישיבה בשולחן",
             "placeholder" : "12.."
         },
         {
             "name": "knightsTableSits",
             "type" : "number" ,
-            "label" : "knights Table  sits amount",
+            "label" : "מספר מקומות ישיבה בשולחן אביר",
             "placeholder" : "25.."
+        },
+        {
+            "name": "maxBudget",
+            "type" : "number" ,
+            "label" : "תקציב משוער",
+            "placeholder" : "הזן תקציב"
         }
-        
-        
+
        ]
     }
 }

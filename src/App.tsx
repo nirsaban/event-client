@@ -1,7 +1,7 @@
 import React, { Fragment, ReactNode } from 'react';
 import './App.css';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { routes } from './routes';
+import { dashboardRoutes, mainRoutes } from './routes';
 import { LoginPage } from './pages/auth/login';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -13,23 +13,12 @@ function App() {
   const dispatch = useDispatch();
   const loaderState: boolean = useSelector((state: RootState) => state?.loader?.loader);
   const getRoutes = (): ReactNode => {
-    return routes.map((route) => {
-      // if (route.nested) {
-      //   return (
-      //     <Route path={route.path} element={route.component} key={route.path}>
-      //       {route.nested.map((routeNested) => {
-      //         return (
-      //           <Route
-      //             index={routeNested.path == "confirmDetails"}
-      //             path={routeNested.path}
-      //             element={routeNested.component}
-      //             key={routeNested.path}
-      //           />
-      //         );
-      //       })}
-      //     </Route>
-      //   );
-      // }
+    return mainRoutes.map((route) => {
+      return <Route path={route.path} element={route.component} key={route.path} />;
+    });
+  };
+  const getDashboardRoutes = () => {
+    return dashboardRoutes.map((route) => {
       return <Route path={route.path} element={route.component} key={route.path} />;
     });
   };
@@ -38,6 +27,7 @@ function App() {
     <div className="App">
       <Routes>
         {getRoutes()}
+        {getDashboardRoutes()}
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
       <Backdrop

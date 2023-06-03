@@ -1,4 +1,4 @@
-import { EventEntity, EventsEntity } from './../common/types/entites/events.entity';
+import { EventsEntity } from './../common/types/entites/events.entity';
 import { UserFlow, UsersEntity } from './../common/types/entites/user.entity';
 import { AxiosInstance } from './../../node_modules/axios/index.d';
 import { Axios } from 'axios';
@@ -40,7 +40,7 @@ export class ApiServices {
     }
   }
 
-  public async createEvent(data: FormData): Promise<EventEntity> {
+  public async createEvent(data: FormData): Promise<EventsEntity> {
     try {
       this.httpClient.defaults.headers = {
         ...this.httpClient.defaults.headers,
@@ -50,17 +50,17 @@ export class ApiServices {
 
       store.dispatch(setEvent(response.data as EventsEntity));
 
-      return response.data as EventEntity;
+      return response.data as EventsEntity;
     } catch (error) {
       throw new Error(error);
     }
   }
 
-  public async evnetSettings(eventId: string, data: SettingsProps): Promise<SettingsProps> {
+  public async evnetSettings(event: EventsEntity, data: SettingsProps): Promise<SettingsProps> {
     try {
-      const response = await this.httpClient.post(`/events/${eventId}/settings`, { ...data });
+      const response = await this.httpClient.post(`/events/${event.id}/settings`, { ...data });
 
-      store.dispatch(setEvent({ ...eventState, settings: response.data as SettingsProps }));
+      store.dispatch(setEvent({ ...event, settings: response.data as SettingsProps }));
 
       return response.data as SettingsProps;
     } catch (error) {

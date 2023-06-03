@@ -9,6 +9,7 @@ import { UsersEntity, flowOrder } from '../../../common/types/entites/user.entit
 import { ZodType, z } from 'zod';
 import { useEffect, useState } from 'react';
 import { Box, Grid, Button } from '@mui/material';
+import { ButtonsFooter } from './buttons';
 
 const schema: ZodType<Partial<SettingsProps>> = schemas.settings;
 
@@ -37,8 +38,8 @@ export const Settings = ({ back, step, next, defaultState }) => {
     {
       name: 'guestAmount',
       type: 'number',
-      label: "Guest's Amount",
-      placeholder: 'Enter guests amount',
+      label: 'כמות האורחים',
+      placeholder: 'הזן כמות אורחים משוערת',
       handleChange: handleChange,
       value: state && state['guestAmount'],
       register: () => register('guestAmount')
@@ -46,7 +47,7 @@ export const Settings = ({ back, step, next, defaultState }) => {
     {
       name: 'maxBudget',
       type: 'number',
-      label: 'Maximum Budget',
+      label: 'מקסימום תקציב ',
       placeholder: 'Enter Budget',
       handleChange: handleChange,
       value: state && state['maxBudget'],
@@ -55,8 +56,8 @@ export const Settings = ({ back, step, next, defaultState }) => {
     {
       name: 'reserve',
       type: 'number',
-      label: 'Reserve sits amount',
-      placeholder: 'Enter reserve amount',
+      label: 'כמות רזרבה',
+      placeholder: 'כמות אורחים משוערת ברזרבה',
       value: state && state['reserve'],
       handleChange: handleChange,
       register: () => register('reserve')
@@ -64,7 +65,7 @@ export const Settings = ({ back, step, next, defaultState }) => {
     {
       name: 'tableSits',
       type: 'number',
-      label: 'Table sits amount',
+      label: 'מספר כיסאות בשולחן',
       placeholder: '12..',
       value: state && state['tableSits'],
       handleChange: handleChange,
@@ -73,7 +74,7 @@ export const Settings = ({ back, step, next, defaultState }) => {
     {
       name: 'knightsTableSits',
       type: 'number',
-      label: 'knights Table  sits amount',
+      label: 'מספר כיסאות בשולחן אביר',
       placeholder: '25..',
       value: state && state['knightsTableSits'],
       handleChange: handleChange,
@@ -99,41 +100,7 @@ export const Settings = ({ back, step, next, defaultState }) => {
             </>
           );
         })}
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            padding: 1,
-            justifyContent: `${flowOrder.indexOf(step) > 1 ? 'space-between' : 'center'}`,
-            margin: 'auto auto'
-          }}
-        >
-          <Box>
-            {flowOrder.indexOf(step) > 1 ? (
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={(e) => back<ValidationSchema>(e, state)}
-              >
-                Back
-              </Button>
-            ) : (
-              ''
-            )}
-          </Box>
-          <Box>
-            {flowOrder.indexOf(step) === flowOrder.length - 2 ? (
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Finish and Submit
-              </Button>
-            ) : (
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Next
-              </Button>
-            )}
-          </Box>
-        </Grid>
+        {step ? <ButtonsFooter<ValidationSchema> state={state} back={back} step={step} /> : ''}
       </Box>
     </>
   );

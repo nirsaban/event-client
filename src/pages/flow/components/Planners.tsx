@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { schemas } from '../flow.schemas';
 import { ZodType, z } from 'zod';
+import { ButtonsFooter } from './buttons';
 
 const schema: ZodType<Partial<PlannersProps>> = schemas.planners;
 
@@ -48,8 +49,8 @@ export const Planners = ({ step, next, back, defaultState }) => {
         {
           name: 'firstNameB',
           type: 'text',
-          label: 'First name',
-          placeholder: 'Enter guests amount',
+          label: 'שם פרטי',
+          placeholder: 'הזן שם פרטי',
           handleChange: handleChange,
           value: state && state['firstNameB'],
           register: () => register('firstNameB'),
@@ -58,8 +59,8 @@ export const Planners = ({ step, next, back, defaultState }) => {
         {
           name: 'lastNameB',
           type: 'text',
-          label: 'Last name',
-          placeholder: 'Enter guests amount',
+          label: 'שם משפחה',
+          placeholder: 'הזן שם משפחה',
           handleChange: handleChange,
           value: state && state['lastNameB'],
           register: () => register('lastNameB'),
@@ -68,8 +69,8 @@ export const Planners = ({ step, next, back, defaultState }) => {
         {
           name: 'rollB',
           type: 'select',
-          label: 'Who is',
-          options: ['Groom', 'Bride'],
+          label: 'מי את.ה?',
+          options: ['חתן', 'כלה'],
           handleChange: handleChange,
           value: state && state['rollB'],
           register: () => register('rollB'),
@@ -78,8 +79,8 @@ export const Planners = ({ step, next, back, defaultState }) => {
         {
           name: 'phoneB',
           type: 'tel',
-          label: 'Phone number',
-          placeholder: 'Enter phone number',
+          label: 'מסםר נייד',
+          placeholder: 'הזן משפר נייד',
           value: state && state['phoneB'],
           register: () => register('phoneB'),
           col: 6
@@ -92,7 +93,7 @@ export const Planners = ({ step, next, back, defaultState }) => {
         {
           name: 'firstName',
           type: 'text',
-          label: 'First name',
+          label: 'שם פרטי',
           placeholder: 'Enter guests amount',
           register: () => register('firstName'),
           value: userState && userState['firstName'],
@@ -102,8 +103,8 @@ export const Planners = ({ step, next, back, defaultState }) => {
         {
           name: 'lastName',
           type: 'text',
-          label: 'Last name',
-          placeholder: 'Enter guests amount',
+          label: 'שם משפחה',
+          placeholder: 'הזן שם משפחה',
           value: userState && userState['lastName'],
           register: () => register('lastName'),
           disabled: true,
@@ -112,8 +113,8 @@ export const Planners = ({ step, next, back, defaultState }) => {
         {
           name: 'roll',
           type: 'select',
-          label: 'Who is',
-          options: ['Groom', 'Bride'],
+          label: 'מי את.ה?',
+          options: ['חתן', 'כלה'],
           value: (state && state['roll']) || userState['roll'],
           register: () => register('roll'),
           col: 6
@@ -121,8 +122,8 @@ export const Planners = ({ step, next, back, defaultState }) => {
         {
           name: 'phone',
           type: 'tel',
-          label: 'Phone number',
-          placeholder: 'Enter phone number',
+          label: 'מספר נייד',
+          placeholder: 'הזן מספר נייד',
           value: userState && userState['phone'],
           disabled: true,
           register: () => register('phone'),
@@ -133,8 +134,8 @@ export const Planners = ({ step, next, back, defaultState }) => {
     {
       name: 'image',
       type: 'file',
-      label: 'Background event Image',
-      placeholder: 'Choose the image for the event',
+      label: 'תמונה רקע שלכם',
+      placeholder: 'העלו תמונת רקע משותפת שלכם',
       register: () => register('image')
     }
   ] as unknown as InputFlow[];
@@ -165,41 +166,7 @@ export const Planners = ({ step, next, back, defaultState }) => {
             return <UIInput errors={errors} {...input} handleChange={handleChange} />;
           }
         })}
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            padding: 1,
-            justifyContent: `${flowOrder.indexOf(step) > 1 ? 'space-between' : 'center'}`,
-            margin: 'auto auto'
-          }}
-        >
-          <Box>
-            {flowOrder.indexOf(step) > 1 ? (
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={(e) => back<ValidationSchema>(e, state)}
-              >
-                Back
-              </Button>
-            ) : (
-              ''
-            )}
-          </Box>
-          <Box>
-            {flowOrder.indexOf(step) === flowOrder.length - 2 ? (
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Finish and Submit
-              </Button>
-            ) : (
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Next
-              </Button>
-            )}
-          </Box>
-        </Grid>
+        {step ? <ButtonsFooter<ValidationSchema> state={state} back={back} step={step} /> : ''}
       </Box>
     </>
   );
